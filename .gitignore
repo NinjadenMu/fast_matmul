@@ -1,3 +1,6 @@
+venv
+misc.py
+
 # Prerequisites
 *.d
 
