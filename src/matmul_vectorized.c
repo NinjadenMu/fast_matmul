@@ -1,6 +1,24 @@
+/**
+ * @file matmul_vectorized.c
+ *
+ * This file assumes that all buffers are in column major order, and that C is
+ * 0-initialized.  It defaults to a tile size of 64, which can be changed by
+ * setting environment variable `tile_size`.
+ *
+ * Its microkernel operates on 128-bit registers using ARM NEON intrinisics.
+ * The register block is 12x8, which uses 24 registers (and 3 additional
+ * registers to load a column from A).  This can be changed by setting MR and
+ * NR, although the default already uses registers very aggressively.  It
+ * also uses tiling to improve cache utilization.  The tile size can be
+ * modified at runtime by setting environment variable `tile_size`.
+ * This implementation is already fairly fast, and can outperform OpenBLAS
+ * when well-tuned in single-thread mode (although this is not a fair
+ * comparision, since OpenBLAS may be highly parallelized.)
+ */
+
+#include <arm_neon.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <arm_neon.h>
 
 #define UNROLL _Pragma("clang loop unroll(full)")
 
@@ -15,11 +33,10 @@
 #define MV (MR / 4)
 #endif
 
-static inline void micro_kernel_vectorized(int n, int i, int j,
-                                                  int k_start, int k_end,
-                                                  float *restrict A,
-                                                  float *restrict B,
-                                                  float *restrict C) {
+static inline void micro_kernel_vectorized(int n, int i, int j, int k_start,
+                                           int k_end, float *restrict A,
+                                           float *restrict B,
+                                           float *restrict C) {
   float32x4_t acc[NR][MV];
   UNROLL
   for (int jj = 0; jj < NR; jj++) {
@@ -76,8 +93,7 @@ void matmul_vectorized(int n, float *restrict A, float *restrict B,
           for (int i = i_tile; i < i_max; i += MR) {
             if (i + MR <= i_max && j + NR <= j_max) {
               micro_kernel_vectorized(n, i, j, k_tile, k_max, A, B, C);
-            }
-            else {
+            } else {
               const int i_end = i + MR < i_max ? i + MR : i_max;
               const int j_end = j + NR < j_max ? j + NR : j_max;
               for (int jj = j; jj < j_end; jj++) {

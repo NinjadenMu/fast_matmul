@@ -7,7 +7,8 @@
  * setting environment variable `tile_size`.  The register block size is 4x4,
  * which can be changed by setting compile-time macros `MR` and `NR`.  It uses
  * tiling to improve cache utilization, as cache resident data is used
- * maximally.  Then, because a naive implementation is bound by LD/ST
+ * maximally.  The tile size may be changed at runtime by setting environment
+ * variable `tile_size`.  Because a naive implementation is bound by LD/ST
  * pipes, this implementation uses a micro-kernel that loads small blocks
  * fully into registers, which reduces traffic between the CPU and the cache.
  * Previously, a single FMA (fused-multiply-add) required 2 loads and a store,
@@ -69,7 +70,7 @@ static inline void micro_kernel(int n, int i, int j, int k_start, int k_end,
   // which improves latency hiding
   for (int k = k_start; k < k_end; k++) {
     // Used to store k-th column and row from A and B respectively in registers
-    //float A_col[MR];
+    // float A_col[MR];
     float B_row[NR];
     /*UNROLL
     for (int ii = 0; ii < MR; ii++) {
@@ -86,7 +87,7 @@ static inline void micro_kernel(int n, int i, int j, int k_start, int k_end,
       float a = A[i + ii + k * n];
       UNROLL
       for (int jj = 0; jj < NR; jj++) {
-        //acc[ii][jj] += A_col[ii] * B_row[jj];
+        // acc[ii][jj] += A_col[ii] * B_row[jj];
         acc[ii][jj] += a * B_row[jj];
       }
     }
@@ -122,8 +123,7 @@ void matmul_micro_kernel(int n, const float *restrict A,
           for (int i = i_tile; i < i_max; i += MR) {
             if (i + MR <= i_max && j + NR <= j_max) {
               micro_kernel(n, i, j, k_tile, k_max, A, B, C);
-            } 
-            else {
+            } else {
               const int i_end = i + MR < i_max ? i + MR : i_max;
               const int j_end = j + NR < j_max ? j + NR : j_max;
               for (int jj = j; jj < j_end; jj++) {
