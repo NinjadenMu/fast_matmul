@@ -7,7 +7,7 @@
  * compiled with loop interchange and vectorization optimizations off.
  */
 
-void matmul_naive(int n, const float *A, const float *B, float *C) {
+int matmul_naive(int n, const float *A, const float *B, float *C) {
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
       float acc = 0;
@@ -17,4 +17,6 @@ void matmul_naive(int n, const float *A, const float *B, float *C) {
       C[i + j * n] = acc;
     }
   }
+
+  return 0;
 }

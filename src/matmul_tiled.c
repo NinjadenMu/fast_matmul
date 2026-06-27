@@ -16,7 +16,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void matmul_tiled(int n, const float *A, const float *B, float *C) {
+int matmul_tiled(int n, const float *A, const float *B, float *C) {
   static int tile_size = 0;
 
   // avoids re-reading the tile size every time this function is called
@@ -45,4 +45,6 @@ void matmul_tiled(int n, const float *A, const float *B, float *C) {
       }
     }
   }
+
+  return 0;
 }

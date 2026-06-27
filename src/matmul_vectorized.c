@@ -13,7 +13,7 @@
  * modified at runtime by setting environment variable `tile_size`.
  * This implementation is already fairly fast, and can outperform OpenBLAS
  * when well-tuned in single-thread mode (although this is not a fair
- * comparision, since OpenBLAS may be highly parallelized.)
+ * comparision, since OpenBLAS is designed to be highly parallelized.)
  */
 
 #include <arm_neon.h>
@@ -34,8 +34,8 @@
 #endif
 
 static inline void micro_kernel_vectorized(int n, int i, int j, int k_start,
-                                           int k_end, float *restrict A,
-                                           float *restrict B,
+                                           int k_end, const float *restrict A,
+                                           const float *restrict B,
                                            float *restrict C) {
   float32x4_t acc[NR][MV];
   UNROLL
@@ -72,8 +72,8 @@ static inline void micro_kernel_vectorized(int n, int i, int j, int k_start,
   }
 }
 
-void matmul_vectorized(int n, float *restrict A, float *restrict B,
-                       float *restrict C) {
+int matmul_vectorized(int n, const float *restrict A, const float *restrict B,
+                      float *restrict C) {
   assert(!(MR % 4 || NR % 4));
 
   static int tile_size = 0;
@@ -109,4 +109,6 @@ void matmul_vectorized(int n, float *restrict A, float *restrict B,
       }
     }
   }
+
+  return 0;
 }

@@ -1,6 +1,6 @@
 venv/
 .DS_Store
-misc.py
+scripts/misc.py
 
 # Prerequisites
 *.d

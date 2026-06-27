@@ -12,7 +12,7 @@
  * should be compiled with vectorization optimizations off.
  */
 
-void matmul_permuted(int n, const float *A, const float *B, float *C) {
+int matmul_permuted(int n, const float *A, const float *B, float *C) {
   for (int j = 0; j < n; j++) {
     for (int k = 0; k < n; k++) {
       // load B[j * n + k] into a register to avoid extra memory access
@@ -23,4 +23,6 @@ void matmul_permuted(int n, const float *A, const float *B, float *C) {
       }
     }
   }
+
+  return 0;
 }

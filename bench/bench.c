@@ -10,10 +10,13 @@ typedef struct {
   matmul_func_t func;
 } impl_t;
 
-impl_t implementations[] = {
-    {"naive", matmul_naive},           {"permuted", matmul_permuted},
-    {"tiled", matmul_tiled},           {"micro_kernel", matmul_micro_kernel},
-    {"vectorized", matmul_vectorized}, {NULL, NULL}};
+impl_t implementations[] = {{"naive", matmul_naive},
+                            {"permuted", matmul_permuted},
+                            {"tiled", matmul_tiled},
+                            {"micro_kernel", matmul_micro_kernel},
+                            {"vectorized", matmul_vectorized},
+                            {"blis", matmul_blis},
+                            {NULL, NULL}};
 
 void randomize_matrix(int n, float *matrix) {
   for (int i = 0; i < n * n; i++) {
@@ -46,9 +49,9 @@ int main(int argc, char **argv) {
   float *A, *B, *C;
   size_t matrix_bytes = n * n * sizeof(float);
   // allocate 64-byte aligned memory
-  if (posix_memalign((void **)&A, 64, matrix_bytes) != 0 ||
-      posix_memalign((void **)&B, 64, matrix_bytes) != 0 ||
-      posix_memalign((void **)&C, 64, matrix_bytes) != 0) {
+  if (posix_memalign((void **)&A, MEM_ALIGNMENT_MIN, matrix_bytes) ||
+      posix_memalign((void **)&B, MEM_ALIGNMENT_MIN, matrix_bytes) ||
+      posix_memalign((void **)&C, MEM_ALIGNMENT_MIN, matrix_bytes)) {
     fprintf(stderr, "Error: memory allocation failed\n");
     return 1;
   }

@@ -102,8 +102,8 @@ static inline void micro_kernel(int n, int i, int j, int k_start, int k_end,
   }
 }
 
-void matmul_micro_kernel(int n, const float *restrict A,
-                         const float *restrict B, float *restrict C) {
+int matmul_micro_kernel(int n, const float *restrict A, const float *restrict B,
+                        float *restrict C) {
   static int tile_size = 0;
 
   // avoids re-reading the tile size every time this function is called
@@ -139,4 +139,6 @@ void matmul_micro_kernel(int n, const float *restrict A,
       }
     }
   }
+
+  return 0;
 }
