@@ -1,3 +1,11 @@
+"""
+A basic autotuner that can tune an arbitrary number of parameters to maximize 
+gflops. Grid search and a random tuner are implemented. The random tuner 
+seems to work better for an equivalent amount of compute, but it seems like 
+the benefits of autotuning vs. choosing some reasonable values by hand are 
+fairly minimal.
+"""
+
 import copy
 import json
 import os
@@ -9,12 +17,12 @@ from tqdm import tqdm
 BENCH_PATH = './bench'
 TARGET = 'blis'
 TRIALS = 1
-TEST_SIZES = [500, 1000, 1500, 2000]
+TEST_SIZES = [500, 1000, 1500, 2000, 3000]
 # Parameters to search over and (min, max, min_step) defining search space axes
 SEARCH_SPACE = {
-  'mc': (60, 264, 12), 
-  'nc': (64, 256, 8), 
-  'kc': (64, 256, 4)
+  'mc': (12, 2040, 12), 
+  'nc': (8, 2048, 8), 
+  'kc': (16, 2048, 8)
 }
 MAX_POINTS = 300
 

@@ -31,7 +31,7 @@
  * This implementation uses a vectorized, and register-blocked micro-kernel
  * performing `kc` rank-1 updates similar to the one in `matmul_vectorized.c`.
  *
- * Panel sizes may be configured at compile-time by setting environment
+ * Panel sizes may be configured at run time by setting environment
  * variables `mc` (should be divisible by MR),
  * `nc` (should be divisible by NR), and `kc`.
  * Sliver (micropanel/register block) sizes may be configured at compile time
