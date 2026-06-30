@@ -6,6 +6,8 @@
 
 #include "matmul.h"
 
+#include <time.h>
+
 #define UNROLL _Pragma("clang loop unroll(full)")
 
 #ifndef MR
@@ -63,13 +65,6 @@ static inline void micro_kernel_blis(int n, int i_start, int j_start,
   }
 }
 
-static int get_env_int(const char *env_var, int default_val) {
-  const char *val_string = getenv(env_var);
-  int val = val_string ? atoi(val_string) : default_val;
-  assert(val > 0);
-  return val;
-}
-
 static void pack_A(int n, int i_start, int i_end, int k_start, int k_end,
                    const float *restrict A, float *restrict A_pack) {
   float *restrict dst = A_pack;
@@ -105,9 +100,11 @@ int matmul_blis(int n, const float *restrict A, const float *restrict B,
   static int nc = 0;
   static int kc = 0;
   if (!initialized) {
-    mc = get_env_int("mc", 96);
-    nc = get_env_int("nc", 96);
-    kc = get_env_int("kc", 96);
+    mc = get_env_int("mc", 420);
+    nc = get_env_int("nc", 504);
+    kc = get_env_int("kc", 108);
+    assert(!(mc % MR));
+    assert(!(nc % NR));
     initialized = true;
   }
 

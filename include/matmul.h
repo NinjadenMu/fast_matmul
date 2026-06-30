@@ -18,5 +18,9 @@ int matmul_vectorized(int n, const float *restrict A, const float *restrict B,
                       float *restrict C);
 int matmul_blis(int n, const float *restrict A, const float *restrict B,
                 float *restrict C);
+int matmul_parallel(int n, const float *restrict A, const float *restrict B,
+                float *restrict C);
+
+int get_env_int(const char *env_var, int default_val);
 
 #endif

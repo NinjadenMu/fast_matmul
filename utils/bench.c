@@ -16,6 +16,7 @@ impl_t implementations[] = {{"naive", matmul_naive},
                             {"micro_kernel", matmul_micro_kernel},
                             {"vectorized", matmul_vectorized},
                             {"blis", matmul_blis},
+                            {"parallel", matmul_parallel},
                             {NULL, NULL}};
 
 void randomize_matrix(int n, float *matrix) {
@@ -25,13 +26,14 @@ void randomize_matrix(int n, float *matrix) {
 }
 
 int main(int argc, char **argv) {
-  if (argc != 3) {
+  if (argc != 4) {
     fprintf(stderr, "Error: not all required arguments provided");
     return 1;
   }
 
   const char *impl_name = argv[1];
   int n = atoi(argv[2]);
+  int num_trials = atoi(argv[3]);
 
   matmul_func_t func = NULL;
   for (int i = 0; implementations[i].name != NULL; i++) {
@@ -59,15 +61,22 @@ int main(int argc, char **argv) {
   randomize_matrix(n, B);
   memset(C, 0, matrix_bytes);
 
-  struct timespec start, end;
-  clock_gettime(CLOCK_MONOTONIC, &start);
-  func(n, A, B, C);
-  clock_gettime(CLOCK_MONOTONIC, &end);
+  double total_time = 0;
+  for (int i = 0; i < num_trials + 1; i++) {
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    func(n, A, B, C);
+    clock_gettime(CLOCK_MONOTONIC, &end);
 
-  double elapsed =
+    double elapsed =
       (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) * 1e-9;
 
-  printf("%f seconds\n", elapsed);
+    if (i != 0) total_time += elapsed;
+  }
+
+  double gflops = (2.0 * n * n * n * num_trials) / (1e9 * total_time);
+  printf("{\"avg_time\":\"%.3gs\",\"gflops\":\"%.3g\"}", total_time / (num_trials), gflops);
+  fflush(stdout);
 
   free(A);
   free(B);
