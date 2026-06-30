@@ -1,9 +1,10 @@
 """
 A basic autotuner that can tune an arbitrary number of parameters to maximize 
-gflops. Grid search and a random tuner are implemented. The random tuner 
-seems to work better for an equivalent amount of compute, but it seems like 
-the benefits of autotuning vs. choosing some reasonable values by hand are 
-fairly minimal.
+gflops. Grid search and a random tuner are implemented. 
+
+The random tuner works better for an equivalent amount of compute, 
+but it seems like the benefits of autotuning vs. choosing some reasonable 
+values by hand are fairly minimal.
 """
 
 import copy
