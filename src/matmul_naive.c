@@ -1,8 +1,8 @@
 /**
  * @file matmul_naive.c
- * @brief a maximally naive matmul implementation, assumes column-major order
+ * @brief a maximally naive matmul implementation
  *
- * This file assumes all buffers are in column-major order.  It's intended
+ * This file assumes all matrices are in column-major order.  It's intended
  * to be a maximally naive baseline implementation.  As such, it should be
  * compiled with loop interchange and vectorization optimizations off.
  */

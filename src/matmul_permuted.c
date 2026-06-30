@@ -2,7 +2,7 @@
  * @file matmul_permuted.c
  * @brief a faster matmul implementation through a simple locality optimization
  *
- * This file assumes all buffers are in column-major order, and that the
+ * This file assumes all matrices are in column-major order, and that the
  * output buffer is 0-initialized.  By permuting the loops such that the
  * innermost index is the one with the most spatially local access pattern
  * (just walking down a column), cache lines may be used multiple times,

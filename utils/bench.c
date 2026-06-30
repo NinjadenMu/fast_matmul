@@ -10,14 +10,11 @@ typedef struct {
   matmul_func_t func;
 } impl_t;
 
-impl_t implementations[] = {{"naive", matmul_naive},
-                            {"permuted", matmul_permuted},
-                            {"tiled", matmul_tiled},
-                            {"micro_kernel", matmul_micro_kernel},
-                            {"vectorized", matmul_vectorized},
-                            {"blis", matmul_blis},
-                            {"parallel", matmul_parallel},
-                            {NULL, NULL}};
+impl_t implementations[] = {
+    {"naive", matmul_naive},           {"permuted", matmul_permuted},
+    {"tiled", matmul_tiled},           {"micro_kernel", matmul_micro_kernel},
+    {"vectorized", matmul_vectorized}, {"blis", matmul_blis},
+    {"parallel", matmul_parallel},     {NULL, NULL}};
 
 void randomize_matrix(int n, float *matrix) {
   for (int i = 0; i < n * n; i++) {
@@ -69,13 +66,15 @@ int main(int argc, char **argv) {
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     double elapsed =
-      (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) * 1e-9;
+        (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) * 1e-9;
 
-    if (i != 0) total_time += elapsed;
+    if (i != 0)
+      total_time += elapsed;
   }
 
   double gflops = (2.0 * n * n * n * num_trials) / (1e9 * total_time);
-  printf("{\"avg_time\":\"%.3gs\",\"gflops\":\"%.3g\"}", total_time / (num_trials), gflops);
+  printf("{\"avg_time\":\"%.3gs\",\"gflops\":\"%.3g\"}",
+         total_time / (num_trials), gflops);
   fflush(stdout);
 
   free(A);

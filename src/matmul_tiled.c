@@ -2,13 +2,18 @@
  * @file matmul_tiled.c
  * @brief a matmul implementation with tiling, has good cache utilization
  *
- * This file assumes all buffers are in column-major order, and that the
- * output buffer is 0-initialized.  It defaults to a tile size of 64, which
- * can be changed by setting environment variable `tile_size`.  Well-chosen
- * tile sizes can lead to much better cache utilization by keeping all
- * floats in the cache until they're not needed anymore.
- * However, this is actually slower than the permuted version on my hardware,
- * since both are bottlenecked by the number of LD/ST pipes, not the cache.
+ * This file assumes all matrices are in column-major order, and that the
+ * output buffer is 0-initialized.
+ *
+ * Well-chosen tile sizes can lead to much better cache utilization by keeping
+ * all floats in the cache until they're not needed anymore.  It defaults to a
+ * tile size of 64, which can be changed by setting environment variable
+ * `tile_size`.
+ *
+ * However, this is actually slightly slower than the permuted version on
+ * my hardware, since both are bottlenecked by the number of LD/ST pipes,
+ * not the cache.
+ *
  * This is still designed to be a simple implementation, so autovectorization
  * should be turned off when compiling.
  */
