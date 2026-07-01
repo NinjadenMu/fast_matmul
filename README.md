@@ -12,7 +12,7 @@ Currently, all compile-time and run-time parameters are tuned for the Apple M4. 
 The makefile should work out of the box for recent Apple Silicon machines, but may require some edits to how it links with OpenMP depending on your system.
 
 Upon compilation, a `bench` executable will be created.  The scripts rely on this executable, and it may also be invoked by the user with the following interface:
-`./bench <implementation_name> <n (matrix dimension)> <number of trys to average performance statistics across>`
+`./bench <implementation_name> <n (matrix dimension)> <number of tries to average performance statistics across>`
 
 The implementation names are:
 - `naive`: a straightforwad i-j-k loop nest
