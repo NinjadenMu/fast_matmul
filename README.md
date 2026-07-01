@@ -1,2 +1,2 @@
 # fast_matmul
-A collection of matmul implementations optimized for the Apple M4 CPU
+![Graphs of Largest Matrices Multiplied vs Time Elapsed for Different Implementations](plots/plots.png)
