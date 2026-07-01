@@ -17,6 +17,15 @@ IMPLEMENTATIONS = [
   'blis',
   'parallel'
 ]
+IMPLEMENTATION_LABELS = {
+  'naive': 'Naive',
+  'permuted': 'Permuted',
+  'tiled': 'Tiled',
+  'micro_kernel': 'Micro-kernel',
+  'vectorized': 'Vectorized Micro-kernel (ARM NEON)',
+  'blis': 'Single-threaded BLIS-style',
+  'parallel': 'Multi-threaded BLIS-style'
+}
 
 
 def benchmark(make_command, shell=False):
@@ -54,12 +63,12 @@ for implementation in tqdm(IMPLEMENTATIONS):
     lambda n, impl=implementation: [BENCH_PATH, impl, str(n), '1']
   )
 
-implementation_lines['OpenBLAS Single-threaded'] = benchmark(
+implementation_lines['Single-threaded OpenBLAS'] = benchmark(
   lambda n: f'OPENBLAS_NUM_THREADS=1 python scripts/openblas.py -n {n}',
   shell=True,
 )
 
-implementation_lines['OpenBLAS Multi-threaded'] = benchmark(
+implementation_lines['Multi-threaded OpenBLAS'] = benchmark(
   lambda n: f'python scripts/openblas.py -n {n}',
   shell=True,
 )
@@ -67,7 +76,8 @@ implementation_lines['OpenBLAS Multi-threaded'] = benchmark(
 plt.figure(figsize=(10, 6))
 
 for implementation, coords in implementation_lines.items():
-  plt.plot(coords['x'], coords['y'], marker='o', linestyle='-', label=implementation)
+  plt.plot(coords['x'], coords['y'], marker='o', 
+           linestyle='-', label=IMPLEMENTATION_LABELS.get(implementation, implementation))
 
 plt.xlabel('Time Elapsed (s)')
 plt.ylabel('n')
