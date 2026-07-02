@@ -3,6 +3,7 @@ venv/
 scripts/misc.py
 scripts/misc1.py
 bench
+.gitignore 
 
 # Prerequisites
 *.d
