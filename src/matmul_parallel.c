@@ -230,7 +230,7 @@ int matmul_parallel(int n, const float *restrict A, const float *restrict B,
         // panels in the cache, and each iteration updates a different part 
         // of C. Also, the unit of computation is still worth parallelizing.
         // clang-format off
-        #pragma omp parallel for schedule(static)
+        #pragma omp parallel for schedule(dynamic)
         // clang-format on
         for (int jr = jc; jr < j_max; jr += NR) {
           const float *A_sliver = A_pack;
