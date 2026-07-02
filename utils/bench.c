@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
   }
 
   double gflops = (2.0 * n * n * n * num_trials) / (1e9 * total_time);
-  printf("{\"avg_time\":\"%.3gs\",\"gflops\":\"%.3g\"}",
+  printf("{\"avg_time\":\"%.3fs\",\"gflops\":\"%.3f\"}",
          total_time / (num_trials), gflops);
   fflush(stdout);
 

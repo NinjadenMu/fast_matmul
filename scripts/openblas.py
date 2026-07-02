@@ -9,8 +9,8 @@ parser.add_argument('-n', type=int)
 
 args = parser.parse_args()
 
-A = np.random.rand(args.n, args.n)
-B = np.random.rand(args.n, args.n)
+A = np.random.rand(args.n, args.n).astype(np.float32)
+B = np.random.rand(args.n, args.n).astype(np.float32)
 
 start = time.perf_counter()
 C = A @ B

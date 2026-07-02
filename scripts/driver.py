@@ -3,6 +3,7 @@ import json
 import matplotlib.pyplot as plt
 import math
 import subprocess
+import time
 from tqdm import tqdm
 
 BENCH_PATH = './bench'
@@ -58,11 +59,6 @@ def benchmark(make_command, shell=False):
 
 implementation_lines = dict()
 
-for implementation in tqdm(IMPLEMENTATIONS):
-  implementation_lines[implementation] = benchmark(
-    lambda n, impl=implementation: [BENCH_PATH, impl, str(n), '1']
-  )
-
 implementation_lines['Single-threaded OpenBLAS'] = benchmark(
   lambda n: f'OPENBLAS_NUM_THREADS=1 python scripts/openblas.py -n {n}',
   shell=True,
@@ -72,6 +68,11 @@ implementation_lines['Multi-threaded OpenBLAS'] = benchmark(
   lambda n: f'python scripts/openblas.py -n {n}',
   shell=True,
 )
+
+for implementation in tqdm(IMPLEMENTATIONS):
+  implementation_lines[implementation] = benchmark(
+    lambda n, impl=implementation: [BENCH_PATH, impl, str(n), '1']
+  )
 
 plt.figure(figsize=(10, 6))
 
